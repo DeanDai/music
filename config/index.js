@@ -27,7 +27,22 @@ module.exports = {
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: { // 配置解决跨域问题(http://www.jianshu.com/p/95b2caf7e0da)
+        '/v2': {
+            target: 'https://api.douban.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/v2': '/v2'
+            }
+        },
+        '/v3': {
+            target: 'http://music.qq.com/musicbox/shop/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/v3': '/v3'
+            }
+        }
+    },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
     // (https://github.com/webpack/css-loader#sourcemaps)

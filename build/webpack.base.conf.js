@@ -2,10 +2,15 @@ var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
+var env = process.env.NODE_ENV
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
+
+var cssSourceMapDev = (env === 'development' && config.dev.cssSourceMap)
+var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap)
+var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 
 module.exports = {
   entry: {
@@ -14,7 +19,7 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
-    publicPath: process.env.NODE_ENV === 'production'
+    publicPath: env === 'production'
       ? config.build.assetsPublicPath
       : config.dev.assetsPublicPath
   },
@@ -52,7 +57,15 @@ module.exports = {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
         }
-      }
+      },
+      {
+        test: /muse-ui.src.*?js$/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.less$/,
+        include: [resolve('src')]
+      },
     ]
   }
 }

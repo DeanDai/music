@@ -1,0 +1,62 @@
+@import "variables.less";
+@import "mixins.less";
+blockquote, body, button, caption, dd, div, dl, dt, fieldset, figure, form, h1, h2, h3, h4, h5, h6, hr, html, input, legend, li, menu, ol, p, pre, table, td, textarea, th, ul {
+	margin: 0;
+	padding: 0;
+}
+a, b, blockquote, body, button, caption, dd, del, div, dl, dt, em, fieldset, figure, form, h1, h2, h3, h4, h5, h6, hr, html, i, ins, legend, li, menu, ol, p, pre, s, span, strong, table, td, textarea, th, u, ul {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-user-select: none;
+}
+body, button, input, keygen, legend, select, textarea {
+	font: 14px/1.5 Helvetica,sans-serif;
+}
+li, ul {
+	margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+input, select, textarea {
+	-webkit-appearance: none;
+    border-radius: 0;
+    border: 0;
+    background-color: transparent;
+    &:focus { outline: 0; }
+}
+html, body {
+	overflow-x: hidden;
+    overflow-y: auto;
+}
+.mu-sub-header {
+	position: relative;
+	text-align: left;
+	&:before {
+		content: '';
+		width: 2px;
+		height: 100%;
+		background-color: @primaryColor;
+	}
+}
+.m-p-r {
+	position: relative;
+}
+.m-p-f {
+	position: fixed;
+}
+.m-z-max {
+	z-index: 999999;
+}
+.ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+input.input{
+	color: #333;
+	font-size: 14px;
+	&::-webkit-input-placeholder{
+		font-weight: bold;
+		font-size: 14px;
+    	color: #c9c9c9;	
+	}
+}
