@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  	<mu-appbar class="app-bar m-z-max">
+  	<mu-appbar class="app-bar m-z-max" title="悦己悦人">
       <mu-icon-button icon="menu" slot="left" @click="open" />
       <mu-icon-button icon="expand_more" slot="right" />
     </mu-appbar>
@@ -39,7 +39,7 @@ export default {
 </script>
 
 <style lang="less">
-@import './assets/less/app.less';
+@import './styles/less/app.less';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

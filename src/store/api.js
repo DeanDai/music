@@ -21,11 +21,27 @@ var qqMusicApi = {
 	    params: () => {
 	      return {}
 	    }
+	},
+	search: {
+		// url: 'fcgi-bin/music_search_new_platform?t=0&aggr=1&cr=1&loginUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=jqminiframe.json&needNewCode=0&p=1&catZhida=0&remoteplace=sizer.newclient.next_song',
+		url: 'soso/fcgi-bin/search_for_qq_cp?format=json&inCharset=utf-8&outCharset=utf-8',
+		params: data => {
+			return {
+				n: data.num,
+				w: data.keyword
+			}
+		}
+	},
+	hot: {
+		url: '/splcloud/fcgi-bin/gethotkey.fcg',
+		params: data => {
+			return {}
+		}
 	}
 }
 
 export function fetchLatest () {
-	var p = Vue.http.jsonp(qqMusicApi.latest.url,{params: qqMusicApi.latest.params(), jsonpCallback: 'JsonCallback'});
+	var p = Vue.http.jsonp(qqMusicApi.latest.url,{params: qqMusicApi.latest.params(), jsonpCallback: 'JsonCallback', scriptCharset: 'GBK'});
     p.then(resp => {
         console.log(resp.data);
     }, resp => {
@@ -34,8 +50,22 @@ export function fetchLatest () {
     return p;
 }
 
-export function searchMusic (keyword) {
-	var p = Vue.http.get(musicApi.search.url, {params: musicApi.search.params(keyword)});
+export function searchMusic (keyword, num = 20) {
+	var data = {
+		keyword: keyword,
+		num: num
+	};
+	var p = Vue.http.get(qqMusicApi.search.url, {params: qqMusicApi.search.params(data)});
+    p.then(resp => {
+        console.log(resp.data);
+    }, resp => {
+        console.log("request error");
+    });
+    return p;
+}
+
+export function fetchHot () {
+	var p = Vue.http.get(qqMusicApi.hot.url);
     p.then(resp => {
         console.log(resp.data);
     }, resp => {

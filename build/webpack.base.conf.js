@@ -3,6 +3,7 @@ var utils = require('./utils')
 var config = require('../config')
 var vueLoaderConfig = require('./vue-loader.conf')
 var env = process.env.NODE_ENV
+var EncodingPlugin = require('webpack-encoding-plugin');
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -60,7 +61,9 @@ module.exports = {
       },
       {
         test: /muse-ui.src.*?js$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        include: [resolve('src')],
+        exclude: /node_modules/
       },
       {
         test: /\.less$/,

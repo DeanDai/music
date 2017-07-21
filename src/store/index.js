@@ -6,6 +6,9 @@ var store = {
 	},
 	search (keyword) {
 		return R.searchMusic(keyword);
+	},
+	getHot () {
+		return R.fetchHot();
 	}
 }
 window.store = store;

@@ -41,7 +41,35 @@ module.exports = {
             pathRewrite: {
                 '^/v3': '/v3'
             }
-        }
+        },
+        '/fcgi-bin': {
+            target: 'http://s.music.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/fcgi-bin': '/fcgi-bin'
+            }
+        },
+        '/splcloud': {
+            target: 'https://c.y.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/splcloudn': '/splcloud'
+            }
+        },
+        '/soso': {
+            target: 'https://c.y.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/soso': '/soso'
+            }
+        },
+        '/music': {
+            target: 'http://imgcache.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/music': '/music'
+            }
+        },
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

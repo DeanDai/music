@@ -2,11 +2,8 @@
 	<div>
 		<mu-list v-for="item in list" :key="item.id">
 			<mu-list-item :title="item.songName">
-		      <span slot="describe">
-		        <span>{{item.singerName}}</span>
-		      </span>
-		      <mu-icon-menu slot="right" icon="more_vert">
-		      </mu-icon-menu>
+		      <span class="desc">{{item.singerName}} - {{item.albumName}}</span>
+              <mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
 		    </mu-list-item>
 	  	</mu-list>
 	</div>
@@ -19,22 +16,15 @@
 				default: []
 			},
 			open: false
-		},
-		name: 'leftSide',
-		methods: {
-			close () {
-		      this.$emit('slideToggle', 'close');
-		    }
 		}
 	}
 </script>
-<style>
-	.popup-left {
-	  display: flex;
-	  width: 85%;
-	  max-width: 375px;
-	  height: 100%;
-	  align-items: center;
-	  padding: 24px;
+<style lang="less">
+	.mu-list {
+	  padding: 0;
+	  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	  .m-icon-play {
+	  	color: #999;
+	  }
 	}
 </style>

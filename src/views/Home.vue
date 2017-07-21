@@ -15,7 +15,7 @@
           This is hot
         </div>
         <div v-if="activeTab === 'search'">
-            <search :word="keyword"></search>
+            <search :word="keyword" :hot-list="hotList"></search>
         </div>
       </div>
   </div>
@@ -31,7 +31,8 @@ export default {
     return {
       keyword: '',
       activeTab: 'recommand',
-      latestMusicList: []
+      latestMusicList: [],
+      hotList: []
     }
   },
   mounted () {
@@ -42,14 +43,18 @@ export default {
 
     },
     getHot () {
-
+      
     },
     startSearch () {
-
+      store.getHot().then(resp => {
+        var result = JSON.parse(resp.data);
+        this.hotList = result.data.hotkey;
+      });
     },
     getLatestMusic () {
       var result = store.getLastest().then(resp => {
-        this.latestMusicList = resp.data.songlist || [];  
+        var result = resp.data;
+        this.latestMusicList = result.songlist || [];  
       });
     },
     handleTabChange (val) {
