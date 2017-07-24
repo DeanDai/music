@@ -1,12 +1,10 @@
 <template>
-	<div>
-		<mu-list v-for="item in list" :key="item.id">
-			<mu-list-item :title="item.songName">
-		      <span class="desc">{{item.singerName}} - {{item.albumName}}</span>
-              <mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
-		    </mu-list-item>
-	  	</mu-list>
-	</div>
+	<mu-list>
+		<mu-list-item :title="item.songName"  v-for="item in list" :key="item.id" @click="goToDetail(item)">
+	      <span class="desc">{{item.singerName}} - {{item.albumName}}</span>
+          <mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
+	    </mu-list-item>
+  	</mu-list>
 </template>
 <script>
 	export default {
@@ -14,8 +12,21 @@
 			list: {
 				type: Array,
 				default: []
-			},
-			open: false
+			}
+		},
+		methods: {
+			goToDetail (song) {
+				var songInfo = {
+					songId: song.id,
+					songName: song.songName,
+					albumId: song.albumId,
+					albumName: song.albumName,
+					singerId: song.singerId,
+					singerName: song.singerName
+				}
+				S.songService.setSongInfo(songInfo);
+				this.$router.push('/song/' + songInfo.songId);
+			}
 		}
 	}
 </script>

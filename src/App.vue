@@ -14,6 +14,7 @@
 </template>
 
 <script>
+require('./store/util.js');
 import leftSide from './components/LeftSide'
 export default {
   name: 'app',

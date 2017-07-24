@@ -56,6 +56,20 @@ module.exports = {
                 '^/splcloudn': '/splcloud'
             }
         },
+        '/miniportal': {
+            target: 'http://music.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/miniportal': '/miniportal'
+            }
+        },
+        '/musichall': {
+            target: 'https://c.y.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/musichall': '/musichall'
+            }
+        },
         '/soso': {
             target: 'https://c.y.qq.com/',
             changeOrigin: true,

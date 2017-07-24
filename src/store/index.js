@@ -9,6 +9,12 @@ var store = {
 	},
 	getHot () {
 		return R.fetchHot();
+	},
+	getRecommand () {
+		return R.fetchRecommand();
+	},
+	getLyric (id) {
+		return R.fetchLyric(id);
 	}
 }
 window.store = store;

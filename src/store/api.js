@@ -37,13 +37,35 @@ var qqMusicApi = {
 		params: data => {
 			return {}
 		}
+	},
+	recommand: {
+		url: '/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg',
+		params: data => {
+			return {}
+		}
+	},
+	lyric: {
+		url: '/miniportal/static/lyric/{1}/{0}.xml',
+		params: id => {
+			return {}
+		}
 	}
+}
+
+export function fetchRecommand () {
+	var p = Vue.http.get(qqMusicApi.recommand.url);
+    p.then(resp => {
+        console.info(resp.data);
+    }, resp => {
+        console.log("request error");
+    });
+    return p;
 }
 
 export function fetchLatest () {
 	var p = Vue.http.jsonp(qqMusicApi.latest.url,{params: qqMusicApi.latest.params(), jsonpCallback: 'JsonCallback', scriptCharset: 'GBK'});
     p.then(resp => {
-        console.log(resp.data);
+        console.info(resp.data);
     }, resp => {
         console.log("request error");
     });
@@ -57,7 +79,7 @@ export function searchMusic (keyword, num = 20) {
 	};
 	var p = Vue.http.get(qqMusicApi.search.url, {params: qqMusicApi.search.params(data)});
     p.then(resp => {
-        console.log(resp.data);
+        console.info(resp.data);
     }, resp => {
         console.log("request error");
     });
@@ -67,7 +89,18 @@ export function searchMusic (keyword, num = 20) {
 export function fetchHot () {
 	var p = Vue.http.get(qqMusicApi.hot.url);
     p.then(resp => {
-        console.log(resp.data);
+        console.info(resp.data);
+    }, resp => {
+        console.log("request error");
+    });
+    return p;
+}
+
+export function fetchLyric (songId) {
+	var url = qqMusicApi.lyric.url.format(songId, songId % 100);
+	var p = Vue.http.get(url);
+    p.then(resp => {
+        console.info(resp.data);
     }, resp => {
         console.log("request error");
     });

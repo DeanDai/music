@@ -9,7 +9,7 @@ export default new Router({
 		name: 'Home',
 		component: require('@/views/Home')
 	}, {
-		path: '/song',
+		path: '/song/:id',
 		name: 'Song',
 		component: require('@/views/Song')
 	}]

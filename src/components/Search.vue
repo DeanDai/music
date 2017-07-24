@@ -14,14 +14,14 @@
 					<mu-chip class="chip" v-for="hot in hotList" :key="hot.n" @click="search(hot.k)">{{hot.k}}</mu-chip>
 				</div>
 			</section>
-			<section class="m-history">
+			<section class="m-history" v-if="historyList.length">
 				<h3 class="title">历史搜索</h3>
-				<mu-list v-for="history in historyList" :key="history.id" @click="search(history.text)">
-					<mu-list-item :title="history.text">
+				<mu-list v-for="history in historyList" :key="history" @click="search(history)">
+					<mu-list-item :title="history">
 						<mu-icon value="history" class="m-icon-history" slot="left"/>
-            <mu-icon value="close" @click="deleteCurrentHistory(history)" class="m-icon-delete" slot="right"/>
-				  </mu-list-item>
-			  </mu-list>
+            			<mu-icon value="close" @click="deleteCurrentHistory(history)" class="m-icon-delete" slot="right"/>
+				  	</mu-list-item>
+			  	</mu-list>
 			</section>
 		</div>
 		<div class="m-search-result" v-else>
@@ -29,14 +29,14 @@
 				<h3>最佳匹配</h3>
 			</section> -->
 			<section class="m-songlist">
-				<mu-list v-for="item in searchResult" :key="item.songid">
-					<mu-list-item :title="item.songname">
-			      <span class="desc" v-html="item.singer[0].name + ' - ' + item.albumname">
-			      	{{item.singer[0].name + ' - ' + item.albumname}}
-			      </span>
-            <mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
-			    </mu-list-item>
-		  	</mu-list>
+				<mu-list>
+					<mu-list-item :title="item.songname" v-for="item in searchResult" :key="item.songid" @click="goToDetail(item)">
+			      		<span class="desc" v-html="item.singer[0].name + ' - ' + item.albumname">
+			      			{{item.singer[0].name + ' - ' + item.albumname}}
+			      		</span>
+            			<mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
+			    	</mu-list-item>
+		  		</mu-list>
 			</section>
 		</div>
 	</div>
@@ -45,11 +45,6 @@
 	export default {
 		data () {
 			return {
-				historyList: [
-					{id: 1, text: '越过山丘'}, {id: 2, text: '无条件'}, {id: 3, text: '从前慢'},
-					{id: 4, text: '成都'}, {id: 5, text: '你就不要想起我'}, {id: 6, text: '张学友'},
-					{id: 7, text: '张敬轩'}, {id: 8, text: '情书'}, {id: 9, text: '陈奕迅'}
-				],
 				text: this.keyword,
 				searchResult: []
 			}
@@ -57,6 +52,10 @@
 		props: {
 			keyword: '',
 			hotList: {
+				type: Array,
+				default: []
+			},
+			historyList: {
 				type: Array,
 				default: []
 			}
@@ -68,6 +67,13 @@
 			search (text) {
 				this.text = text || '';
 				if(this.text) {
+					this.historyList.map((item, index) => {
+						if(this.text == item) {
+							this.historyList.splice(index, 1); // 删除重复项
+						}
+					});
+					this.historyList.unshift(this.text);
+					util.cache('s_h_list', this.historyList);
 					store.search(this.text).then(resp => {
 						var result = resp.data;
 						this.searchResult = result.data.song.list || [];
@@ -76,6 +82,18 @@
 			},
 			deleteCurrentHistory (item) {
 				this.historyList.splice(this.historyList.indexOf(item), 1);
+			},
+			goToDetail (song) {
+				var songInfo = {
+					songId: song.songid,
+					songName: song.songname,
+					albumId: song.albumid,
+					albumName: song.albumname,
+					singerId: song.singer[0] ? song.singer[0].id : '',
+					singerName: song.singer[0] ? song.singer[0].name : '',
+				}
+				S.songService.setSongInfo(songInfo);
+				this.$router.push('/song/' + songInfo.songId);
 			}
 		}
 	}
@@ -96,19 +114,19 @@
 		width: 100%;
 		height: 30px;
 		border-radius: 30px;
-    padding: 0 30px;
-  	box-sizing: border-box;
+	    padding: 0 30px;
+	  	box-sizing: border-box;
 	}
 	.mu-text-field-icon {
 		top: 7px;
 		font-size: 16px;
 	}
 	.m-icon-search {
-    color: #c9c9c9;
-    left: 10px;
+	    color: #c9c9c9;
+	    left: 10px;
 	}
 	.m-icon-search-cancel {
-    color: #c9c9c9;
+    	color: #c9c9c9;
 		right: 10px;
 		left: initial;
 	}
@@ -133,11 +151,11 @@
 		padding-top: 15px;
 	}
 	.m-hotlist {
-    >div {
-    	padding-left: 12px;
-    	padding-top: 12px;
-    	padding-bottom: 6px;
-    }
+	    >div {
+	    	padding-left: 12px;
+	    	padding-top: 12px;
+	    	padding-bottom: 6px;
+	    }
 	}
 	.m-history {
 		.mu-item.show-left {

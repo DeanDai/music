@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import filter from '@/store/filter.js'
+import service from '@/store/service.js'
 import router from './router'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
-
 Vue.use(MuseUI)
 Vue.config.productionTip = false
 
