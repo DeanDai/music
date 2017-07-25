@@ -27,19 +27,22 @@
 		},
 		methods: {
 			getLyric () {
-		      store.getLyric(this.songId).then(resp => {
-		        var result = resp.data;
-		        var parser = new xml2js.Parser();
-		        parser.parseString(result,(err, json) => {
-		          var result = util.convertLrcArr(json.lyric.split('\n'));
-		          this.lyricList = result;
-		          this.lyricTimeArr = this.lyricList.map(item => item.time);
-		        });
-		      }, err => {
-		        if(err.statu === 404) { // 找不到歌词
-		          console.info('暂无歌词');
-		        }
-		      });
+				if(this.songId) {
+					store.getLyric(this.songId).then(resp => {
+			        var result = resp.data;
+			        var parser = new xml2js.Parser();
+			        parser.parseString(result,(err, json) => {
+			          var result = util.convertLrcArr(json.lyric.split('\n'));
+			          this.lyricList = result;
+			          this.lyricTimeArr = this.lyricList.map(item => item.time);
+			        });
+			      }, err => {
+			        if(err.status === 404) { // 找不到歌词
+			        	this.lyricList = [];
+			          	console.info('暂无歌词');
+			        }
+			      });
+				}
 		    }
 		},
 		computed: {
@@ -61,18 +64,13 @@
 </script>
 <style lang="less">
 	.lyric {
-	    display: -webkit-box;
-	    -webkit-box-align: center;
-	    position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    width: 100%;
+	    overflow: hidden;
 	    .lyric-box {
 	    	position: relative;
 		    width: 100%;
-		    height: 420px;
+		    height: 480px;
 		    overflow: hidden;
-		    margin-top: 32px;
+		    top: 24px;
 		    bottom: 32px;
 		    .mu-item {
 		    	min-height: 36px;
@@ -91,6 +89,11 @@
 		    		color: #7e57c2;
 		    	}
 		    }
+	    }
+	    @media screen and (max-height: 568px) and (min-height: 480px) {
+	    	.lyric-box {
+	    		height: 350px;
+	    	}	
 	    }
 	    .mu-list {
     	    position: absolute;

@@ -5,29 +5,25 @@
     <div class="bg_mask" style="opacity:0.6;"></div>
     <div class="m-song-content">
       <!-- 歌曲主要内容，标题加歌词 -->
-      <div class="song-info">
-        <mu-list>
-          <mu-list-item :title="songInfo.songName" :describeText="songInfo.singerName">
-            <mu-avatar slot="left" :src="imgUrl"/>
-            <mu-icon class="icon_play" :value="icon_value" slot="right" @click="switchPlay" />
-          </mu-list-item>
-        </mu-list>
-      </div>
+      <song-info-header :song-info="songInfo" :img-url="imgUrl" @play="play" :playing="playing"></song-info-header>
       <lyric :song-id="songInfo.songId" :current-time="currentTime"></lyric>
     </div>
     <div class="m-song-control">
-      <!-- audio控制条 -->
-      <div class="radio-list">
-        <mu-icon value="queue_music" />
+      <div class="radio-list" v-if="false">
+        <mu-icon value="queue_music" @click="showBottomSheet" />
       </div>
+      <!-- audio控制条 -->
       <controls :song-id="songInfo.songId" :play="playing" @changeCurrentTime="changeCurrentTime"></controls>
     </div>
+    <radio-list :bottom-sheet="bottomSheetShow"></radio-list>
   </div>
 </template>
 
 <script>
 import lyric from './../components/Lyric'
 import controls from './../components/Controls'
+import radioList from './../components/RadioList'
+import songInfoHeader from './../components/SongInfoHeader'
 import _ from 'lodash'
 export default {
   name: 'song',
@@ -35,11 +31,11 @@ export default {
     return {
       songInfo: '',
       playing: true,
-      lrcCurIndex: 0,
-      currentTime: 0
+      currentTime: 0,
+      bottomSheetShow: false
     }
   },
-  components: { lyric, controls },
+  components: { lyric, controls, radioList, songInfoHeader },
   created () {
     this.getSongInfo();
   },
@@ -50,28 +46,25 @@ export default {
         this.$router.go(-1);
       }
     },
-    switchPlay () {
-      this.playing = !this.playing;
-    },
     play (isPlay) {
       this.playing = isPlay;
     },
     changeCurrentTime(currentTime){
         this.currentTime = currentTime;
+    },
+    showBottomSheet () {
+      this.bottomSheetShow = true;
     }
   },
   computed: {
-    'icon_value' () {
-      return !this.playing ? 'play_circle_outline' : 'pause_circle_outline';
-    },
     'imgUrl' () {
-      return `http://imgcache.qq.com/music/photo/album_300/${this.songInfo.albumId%100}/300_albumpic_${this.songInfo.albumId}_0.jpg`
+        return this.songInfo.albumId && `http://imgcache.qq.com/music/photo/album_300/${this.songInfo.albumId%100}/300_albumpic_${this.songInfo.albumId}_0.jpg`
     }
   }
 }
 </script>
   
-<style lang="less" scope>
+<style lang="less">
   .page-song, .m-song-bg {
       position: absolute;
       top: 0;
@@ -81,7 +74,8 @@ export default {
       overflow: hidden;
   }
   .page-song {
-    padding-top: 56px;
+    padding: 0;
+    z-index: 999999;
     .m-song-bg {
       z-index: 1;
       background-size: cover;
@@ -92,68 +86,6 @@ export default {
       padding: 0;
       z-index: 3;
     }
-    .mu-avatar {
-      height: 80px;
-      width: 80px;
-      img {
-        -webkit-animation: circling 20s infinite linear;
-        animation: circling 20s infinite linear;
-        @-webkit-keyframes circling {
-          0% {
-              -webkit-transform: rotate(0deg);
-              transform: rotate(0deg)
-          }
-
-          to {
-              -webkit-transform: rotate(1turn);
-              transform: rotate(1turn)
-          }
-        }
-
-        @keyframes circling {
-            0% {
-                -webkit-transform: rotate(0deg);
-                transform: rotate(0deg)
-            }
-
-            to {
-                -webkit-transform: rotate(1turn);
-                transform: rotate(1turn)
-            }
-        }
-      }
-    }
-    .song-info {
-      .mu-item-wrapper {
-        padding: 15px 0;
-        background: rgba(0, 0, 0, 0.1);  
-      }
-      .mu-item {
-        height: 80px;
-        color: #fff;
-        .mu-item-text {
-          color: #fff;
-        }
-        .mu-item-left {
-          width: 80px;
-          max-height: 80px;
-        }
-        .mu-item-right {
-          right: 24px;
-          max-height: inherit;
-        }
-        &.show-left {
-          padding-left: 120px;
-        }
-      }
-    }
-    .icon_play {
-      font-size: 60px;
-      color: rgba(255, 255, 255, .8);
-    }
-    .mu-ripple-wrapper {
-      display: none;
-    }
     .m-song-control {
       position: absolute;
       bottom: 0;
@@ -161,6 +93,15 @@ export default {
       z-index: 3;
       width: 100%;
       height: 90px;
+      .radio-list {
+        position: relative;
+        left: 24px;
+        top: -12px;
+        i{
+          font-size: 32px;
+          color: rgba(255,255,255,.6);
+        }
+      }
     }
   }
 </style>

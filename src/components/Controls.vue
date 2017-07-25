@@ -18,7 +18,6 @@
 			return {
 				audio: null,
 				duration: 0,
-				loadedPercent: 0,
 				currentTime: 0,
 				currentSecond: 0,
 				totalTimeStr: '00:00',
@@ -33,7 +32,8 @@
 		    }
 		},
 		destroyed () {
-			this.audio && this.audio.remove();
+			this.audio && this.audio.pause();
+			this.currentTime = 0;
 		},
 		watch: {
 			'play' (newVal, oldVal) {
@@ -46,23 +46,25 @@
 		},
 		methods: {
 			initAudio () {
-				this.audio = new Audio();
-				var songUrl = `http://ws.stream.qqmusic.qq.com/${this.songId}.m4a?fromtag=46`;
-      			this.audio.src = songUrl;
-				this.audio.addEventListener("timeupdate",e => {
-					this.duration = this.audio.duration;
-					if(this.duration != 0){
-						this.totalTimeStr = util.convertToTime(this.duration);
-						if(this.currentSecond != parseInt(this.audio.currentTime)){
-							this.currentSecond = parseInt(this.audio.currentTime);
+				if(this.songId) {
+					this.audio = new Audio();
+					var songUrl = `http://ws.stream.qqmusic.qq.com/${this.songId}.m4a?fromtag=46`;
+	      			this.audio.src = songUrl;
+					this.audio.addEventListener("timeupdate",e => {
+						this.duration = this.audio.duration;
+						if(this.duration != 0){
+							this.totalTimeStr = util.convertToTime(this.duration);
+							if(this.currentSecond != parseInt(this.audio.currentTime)){
+								this.currentSecond = parseInt(this.audio.currentTime);
+							}
 						}
-					}
-					this.currentTime = this.audio.currentTime;
-					this.$emit('changeCurrentTime', this.audio.currentTime);
-				});
-				this.audio.loop = true;
-				this.audio.play();
-				this.$emit('play', true);
+						this.currentTime = this.audio.currentTime;
+						this.$emit('changeCurrentTime', this.audio.currentTime);
+					});
+					this.audio.loop = true;
+					this.audio.play();
+					this.$emit('play', true);
+				}
 			},
 			handleChange (value) {
 				this.audio.currentTime = value;
