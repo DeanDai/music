@@ -15,6 +15,9 @@ var store = {
 	},
 	getLyric (id) {
 		return R.fetchLyric(id);
+	},
+	getRadioSongList (radioId) {
+		return R.fetchRadioSongList(radioId);
 	}
 }
 window.store = store;

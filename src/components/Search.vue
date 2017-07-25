@@ -16,8 +16,8 @@
 			</section>
 			<section class="m-history" v-if="historyList.length">
 				<h3 class="title">历史搜索</h3>
-				<mu-list v-for="history in historyList" :key="history" @click="search(history)">
-					<mu-list-item :title="history">
+				<mu-list>
+					<mu-list-item :title="history" v-for="history in historyList" :key="history" @click="search(history)">
 						<mu-icon value="history" class="m-icon-history" slot="left"/>
             			<mu-icon value="close" @click="deleteCurrentHistory(history)" class="m-icon-delete" slot="right"/>
 				  	</mu-list-item>

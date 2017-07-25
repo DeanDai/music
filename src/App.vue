@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-  	<mu-appbar class="app-bar m-z-max" title="悦己悦人">
+  	<mu-appbar class="app-bar m-z-max" title="乐己乐人" v-if="!hideTitle">
       <mu-icon-button icon="menu" slot="left" @click="open" />
       <mu-icon-button icon="expand_more" slot="right" />
     </mu-appbar>
   	<left-side @slideToggle="slideToggle" :open="leftPopup"></left-side>
   	<div class="content">
-      <transition name="fade"  mode="out-in">
+      <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
     </div>
@@ -20,7 +20,8 @@ export default {
   name: 'app',
   data () {
   	return {
-  		leftPopup: false
+  		leftPopup: false,
+      hideTitle: false
   	}
   },
   components: { leftSide },

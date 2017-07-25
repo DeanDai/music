@@ -46,8 +46,14 @@ var qqMusicApi = {
 	},
 	lyric: {
 		url: '/miniportal/static/lyric/{1}/{0}.xml',
-		params: id => {
+		params: () => {
 			return {}
+		}
+	},
+	radioSongList: {
+		url: '/v8/fcg-bin/fcg_v8_radiosonglist.fcg?format=json&inCharset=utf-8&outCharset=utf-8&platform=h5',
+		params: id => {
+			labelid: id
 		}
 	}
 }
@@ -100,6 +106,16 @@ export function fetchLyric (songId) {
 	var url = qqMusicApi.lyric.url.format(songId, songId % 100);
 	var p = Vue.http.get(url);
     p.then(resp => {
+        console.info(resp.data);
+    }, resp => {
+        console.log("request error");
+    });
+    return p;
+}
+
+export function fetchRadioSongList (radioId) {
+	var p = Vue.http.get(qqMusicApi.radioSongList.url, {params: qqMusicApi.radioSongList.params(radioId)});
+	p.then(resp => {
         console.info(resp.data);
     }, resp => {
         console.log("request error");

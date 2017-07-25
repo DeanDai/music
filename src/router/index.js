@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
 	routes: [{
 		path: '/',
 		name: 'Home',
@@ -14,3 +14,10 @@ export default new Router({
 		component: require('@/views/Song')
 	}]
 })
+
+router.beforeEach((to, from, next) => {
+	console.log(router)
+	next();
+})
+
+export default router 

@@ -77,6 +77,13 @@ module.exports = {
                 '^/soso': '/soso'
             }
         },
+        '/v8': {
+            target: 'https://c.y.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/v8': '/v8'
+            }
+        },
         '/music': {
             target: 'http://imgcache.qq.com/',
             changeOrigin: true,
@@ -84,6 +91,13 @@ module.exports = {
                 '^/music': '/music'
             }
         },
+        '/music': {
+            target: 'http://imgcache.qq.com/',
+            changeOrigin: true,
+            pathRewrite: {
+                '^/music': '/music'
+            }
+        }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README
