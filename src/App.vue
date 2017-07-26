@@ -2,7 +2,7 @@
   <div id="app">
   	<mu-appbar class="app-bar m-z-max" title="乐己乐人" v-if="!hideTitle">
       <mu-icon-button icon="menu" slot="left" @click="open" />
-      <mu-icon-button icon="expand_more" slot="right" />
+      <!-- <mu-icon-button icon="expand_more" slot="right" /> -->
     </mu-appbar>
   	<left-side @slideToggle="slideToggle" :open="leftPopup"></left-side>
   	<div class="content">
@@ -14,6 +14,8 @@
 </template>
 
 <script>
+require('./Roboto.css');
+require('./MaterialIcons.css');
 require('./store/util.js');
 import leftSide from './components/LeftSide'
 export default {

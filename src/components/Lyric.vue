@@ -72,6 +72,7 @@
 		    overflow: hidden;
 		    top: 24px;
 		    bottom: 32px;
+		    z-index: 3;
 		    .mu-item {
 		    	min-height: 36px;
 		    	height: 36px;
