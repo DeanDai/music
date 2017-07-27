@@ -14,8 +14,8 @@
 </template>
 
 <script>
-require('./Roboto.css');
-require('./MaterialIcons.css');
+require('./styles/Roboto.css');
+require('./styles/MaterialIcons.css');
 require('./store/util.js');
 import leftSide from './components/LeftSide'
 export default {
