@@ -2,8 +2,8 @@
   <div class="page-home">
       <mu-tabs class="m-p-f m-z-max" :value="activeTab" @change="handleTabChange">
         <mu-tab value="recommand" title="推荐音乐"></mu-tab>
-        <mu-tab value="hot" title="热歌榜" @active="getHot"></mu-tab>
-        <mu-tab value="search" title="搜索" @active="startSearch"></mu-tab>
+        <mu-tab value="hot" title="热歌榜"></mu-tab>
+        <mu-tab value="search" title="搜索"></mu-tab>
       </mu-tabs>
       <div class="tab-content">
         <div v-if="activeTab === 'recommand'">
@@ -16,7 +16,7 @@
           This is hot
         </div>
         <div v-if="activeTab === 'search'">
-            <search :word="keyword" :hot-list="hotList" :history-list="historyList"></search>
+            <search :word="keyword" :hot-list="hotList" :history-list="searchHistoryList"></search>
         </div>
       </div>
   </div>
@@ -35,7 +35,7 @@ export default {
       activeTab: '',
       latestMusicList: [],
       hotList: [],
-      historyList: [],
+      searchHistoryList: [],
       recommandRadio: []
     }
   },
@@ -43,41 +43,56 @@ export default {
     this.initPage();
   },
   methods: {
+    showSearchHistoryList () {
+      var searchHistoryList = S.searchService.getSearchHistory();
+      this.searchHistoryList = searchHistoryList;
+    },
+    showKeyword () {
+      this.keyword = S.searchService.getKeyword();
+    },
     initPage () {
       this.activeTab = S.tabService.getCurrentTab() || 'recommand';
-      if(this.activeTab == 'recommand') {
-        this.getRecommand();
-      }
+      this.showSearchHistoryList();
+      this.showKeyword();
     },
     getRecommand () {
       this.getRecommandMusic();
       this.getLatestMusic();
     },
     getRecommandMusic () {
-      var result = store.getRecommand().then(resp => {
+      store.getRecommand().then(resp => {
         var result = resp.data;
         this.recommandRadio = result.data.radioList;
       });
     },
     getLatestMusic () {
-      var result = store.getLastest().then(resp => {
+      store.getLastest().then(resp => {
         var result = resp.data;
         this.latestMusicList = result.songlist || [];  
       });
     },
     getHot () {
-      
     },
     startSearch () {
       store.getHot().then(resp => {
         var result = util.parseData(resp.data);
         this.hotList = result.data.hotkey;
       });
-      this.historyList = util.cache('s_h_list') || [];
     },
     handleTabChange (val) {
       this.activeTab = val;
       S.tabService.setCurrentTab(this.activeTab);
+    }
+  },
+  watch: {
+    'activeTab' (newVal, oldVal) {
+      if(newVal == 'recommand') {
+        this.getRecommand();
+      }else if(newVal == 'hot') {
+        this.getHot();
+      }else if(newVal == 'search') {
+        this.startSearch()
+      }
     }
   }
 }

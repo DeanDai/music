@@ -78,7 +78,7 @@
 	    bottom: 20px;
 	    width: 100%;
 	    .mu-flexbox {
-	    	>span { color: #808080; }
+	    	>span { color: #fff; }
 	    }
 	    .mu-slider {
 	    	margin-bottom: 0;

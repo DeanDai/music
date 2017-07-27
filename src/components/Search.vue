@@ -60,6 +60,9 @@
 				default: []
 			}
 		},
+		watch:{
+			'text':'search'
+		},
 		methods: {
 			clearSearch () {
 				this.text = '';
@@ -67,21 +70,26 @@
 			search (text) {
 				this.text = text || '';
 				if(this.text) {
+					// 搜索字符去重并最新一条置顶
 					this.historyList.map((item, index) => {
 						if(this.text == item) {
 							this.historyList.splice(index, 1); // 删除重复项
 						}
 					});
 					this.historyList.unshift(this.text);
-					util.cache('s_h_list', this.historyList);
+					// 开始搜索
 					store.search(this.text).then(resp => {
 						var result = resp.data;
 						this.searchResult = result.data.song.list || [];
 					});
+					// 保存最新的搜索字符串和搜索记录
+					S.searchService.setKeyword(this.text);
+					S.searchService.setSearchHistory(this.historyList);
 				}
 			},
 			deleteCurrentHistory (item) {
 				this.historyList.splice(this.historyList.indexOf(item), 1);
+				S.searchService.setSearchHistory(this.historyList);
 			},
 			goToDetail (song) {
 				var songInfo = {

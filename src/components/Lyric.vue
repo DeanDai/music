@@ -2,11 +2,12 @@
 	<div class="flex_item">
 		<div class="lyric">
 			<div class="lyric-box">
-				<mu-list :style="{marginTop: lrcMarginTop}">
+				<mu-list :style="{marginTop: lrcMarginTop}" v-if="!noLyric">
 			    	<template v-for="lyric in lyricList">
 			      		<mu-list-item :title="lyric.lrc" :class="lyric.selected ? selectedColor : ''" />
 			    	</template>
 			  	</mu-list>
+			  	<div class="no-lyric" v-else>暂无歌词</div>
 			</div>
 		</div>
 	</div>
@@ -19,7 +20,8 @@
 			return {
 				lyricList: [],
 				lyricTimeArr: [],
-				selectedColor: 'cur_select_lrc'
+				selectedColor: 'cur_select_lrc',
+				noLyric: false
 			}
 		},
 		mounted () {
@@ -32,14 +34,15 @@
 			        var result = resp.data;
 			        var parser = new xml2js.Parser();
 			        parser.parseString(result,(err, json) => {
-			          var result = util.convertLrcArr(json.lyric.split('\n'));
-			          this.lyricList = result;
-			          this.lyricTimeArr = this.lyricList.map(item => item.time);
+		        		this.noLyric = false;
+			          	var result = util.convertLrcArr(json.lyric.split('\n'));
+			          	this.lyricList = result;
+			          	this.lyricTimeArr = this.lyricList.map(item => item.time);
 			        });
 			      }, err => {
 			        if(err.status === 404) { // 找不到歌词
-			        	this.lyricList = [];
 			          	console.info('暂无歌词');
+			          	this.noLyric = true;
 			        }
 			      });
 				}
@@ -47,7 +50,7 @@
 		},
 		computed: {
 			lrcMarginTop (){
-		      return this.lrcCurIndex * (-2) + 1 + 'em';
+		      return this.lrcCurIndex * (-2.2) + 2 + 'em';
 		    },
 		    lrcCurIndex () {
 		    	var index = _.sortedIndex(this.lyricTimeArr, this.currentTime);
@@ -89,6 +92,12 @@
 		    	.mu-item {
 		    		color: #7e57c2;
 		    	}
+		    }
+		    .no-lyric {
+	    	    text-align: center;
+			    color: #fff;
+			    margin-top: 50%;
+			    font-size: 24px;
 		    }
 	    }
 	    @media screen and (max-height: 568px) and (min-height: 480px) {
