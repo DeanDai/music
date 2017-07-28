@@ -12,6 +12,7 @@
 	  </div>
 </template>
 <script>
+	import bus from './eventBus.js'
 	export default {
 		props:['songId', 'play'],
 		data () {
@@ -20,7 +21,7 @@
 				duration: 0,
 				currentTime: 0,
 				currentSecond: 0,
-				totalTimeStr: '00:00',
+				totalTimeStr: '00:00'
 			}
 		},
 		mounted () {
@@ -42,6 +43,13 @@
 				}else {
 					this.audio.pause();
 				}
+			},
+			'songId' (newVal, oldVal) {
+				var songUrl = `http://ws.stream.qqmusic.qq.com/${newVal}.m4a?fromtag=46`;
+				this.audio.src = songUrl;
+				// this.audio.loop = true; // 循环播放该歌曲
+				this.audio.play();
+				this.$emit('play', true);
 			}
 		},
 		methods: {
@@ -50,7 +58,7 @@
 					this.audio = new Audio();
 					var songUrl = `http://ws.stream.qqmusic.qq.com/${this.songId}.m4a?fromtag=46`;
 	      			this.audio.src = songUrl;
-					this.audio.addEventListener("timeupdate",e => {
+					this.audio.addEventListener('timeupdate',e => {
 						this.duration = this.audio.duration;
 						if(this.duration != 0){
 							this.totalTimeStr = util.convertToTime(this.duration);
@@ -61,7 +69,10 @@
 						this.currentTime = this.audio.currentTime;
 						this.$emit('changeCurrentTime', this.audio.currentTime);
 					});
-					this.audio.loop = true;
+					this.audio.addEventListener('ended', e => {
+					  bus.$emit('goNext');
+					});
+					// this.audio.loop = true; // 循环播放该歌曲
 					this.audio.play();
 					this.$emit('play', true);
 				}

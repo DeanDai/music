@@ -27,30 +27,38 @@
 		mounted () {
 			this.getLyric();
 		},
+		watch: {
+			'songId' (newVal, oldVal) {
+				this.fetchLyric();
+			}
+		},
 		methods: {
+			fetchLyric () {
+				store.getLyric(this.songId).then(resp => {
+					var result = resp.data;
+					var parser = new xml2js.Parser();
+					parser.parseString(result,(err, json) => {
+						this.noLyric = false;
+						var result = util.convertLrcArr(json.lyric.split('\n'));
+						this.lyricList = result;
+						this.lyricTimeArr = this.lyricList.map(item => item.time);
+					});
+				}, err => {
+					if(err.status === 404) { // 找不到歌词
+						console.info('暂无歌词');
+						this.noLyric = true;
+					}
+				});
+			},
 			getLyric () {
 				if(this.songId) {
-					store.getLyric(this.songId).then(resp => {
-			        var result = resp.data;
-			        var parser = new xml2js.Parser();
-			        parser.parseString(result,(err, json) => {
-		        		this.noLyric = false;
-			          	var result = util.convertLrcArr(json.lyric.split('\n'));
-			          	this.lyricList = result;
-			          	this.lyricTimeArr = this.lyricList.map(item => item.time);
-			        });
-			      }, err => {
-			        if(err.status === 404) { // 找不到歌词
-			          	console.info('暂无歌词');
-			          	this.noLyric = true;
-			        }
-			      });
+					this.fetchLyric();
 				}
 		    }
 		},
 		computed: {
 			lrcMarginTop (){
-		      return this.lrcCurIndex * (-2.2) + 2 + 'em';
+		      return this.lrcCurIndex * (-2.8) + 2 + 'em';
 		    },
 		    lrcCurIndex () {
 		    	var index = _.sortedIndex(this.lyricTimeArr, this.currentTime);
@@ -77,9 +85,9 @@
 		    bottom: 32px;
 		    z-index: 3;
 		    .mu-item {
-		    	min-height: 36px;
-		    	height: 36px;
-			    line-height: 36px;
+		    	min-height: 44px;
+		    	height: 44px;
+			    line-height: 44px;
 			    overflow: hidden;
 			    text-overflow: ellipsis;
 			    white-space: nowrap;

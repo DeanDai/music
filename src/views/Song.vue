@@ -9,13 +9,13 @@
       <lyric :song-id="songInfo.songId" :current-time="currentTime"></lyric>
     </div>
     <div class="m-song-control">
-      <div class="radio-list" v-if="false">
+      <div class="radio-list" v-if="radioList.length">
         <mu-icon value="queue_music" @click="showBottomSheet" />
       </div>
       <!-- audio控制条 -->
-      <controls :song-id="songInfo.songId" :play="playing" @changeCurrentTime="changeCurrentTime"></controls>
+      <controls :song-id="songInfo.songId" :play="playing" @changeCurrentTime="changeCurrentTime" @play="play"></controls>
     </div>
-    <radio-list :bottom-sheet="bottomSheetShow"></radio-list>
+    <radio-list :song-id="songInfo.songId" @playSong="playSong" @closeBottomSheet="closeBottomSheet" :bottom-sheet="bottomSheetShow" :radio-list="radioList"></radio-list>
   </div>
 </template>
 
@@ -32,16 +32,35 @@ export default {
       songInfo: '',
       playing: true,
       currentTime: 0,
-      bottomSheetShow: false
+      bottomSheetShow: false,
+      radioList: []
     }
   },
   components: { lyric, controls, radioList, songInfoHeader },
   created () {
-    this.getSongInfo();
+    this.getRadioList();
   },
   methods: {
+    getRadioList () {
+      this.radioList = S.radioService.getRadioList();
+      this.getSongInfo();
+    },
     getSongInfo () {
-      this.songInfo = S.songService.getSongInfo();
+      if(this.radioList.length) {
+        var song = this.radioList[0];
+        var songInfo = {
+          songId: song.id,
+          songName: song.name,
+          albumId: song.album.id,
+          albumName: song.album.name,
+          singerId: song.singer[0].id,
+          singerName: song.singer[0].name
+        }
+        S.songService.setSongInfo(songInfo);
+        this.songInfo = songInfo;
+      }else {
+        this.songInfo = S.songService.getSongInfo();
+      }
       if(!this.songInfo) {
         this.$router.go(-1);
       }
@@ -54,6 +73,13 @@ export default {
     },
     showBottomSheet () {
       this.bottomSheetShow = true;
+    },
+    closeBottomSheet () {
+      this.bottomSheetShow = false;
+    },
+    playSong (song) {
+      this.songInfo = song;
+      this.songId = song.id;
     }
   },
   computed: {

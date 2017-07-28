@@ -38,6 +38,13 @@ var service = {
 				util.clearCache('s_h_list');
 			}
 		}
+	})(),
+	radioService: (() => {
+		var radioList = [];
+		return {
+			getRadioList: () => radioList,
+			setRadioList: list => radioList = list
+		}
 	})()
 };
 window.S = window.service = service;

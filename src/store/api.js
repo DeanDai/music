@@ -53,7 +53,9 @@ var qqMusicApi = {
 	radioSongList: {
 		url: '/v8/fcg-bin/fcg_v8_radiosonglist.fcg?format=json&inCharset=utf-8&outCharset=utf-8&platform=h5',
 		params: id => {
-			labelid: id
+			return {
+				labelid: id
+			}
 		}
 	}
 }

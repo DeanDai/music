@@ -10,21 +10,26 @@
 </template>
 <script>
 	export default {
-		props:['songInfo', 'imgUrl'],
-		data () {
-			return {
-				playing: true	
-			}
-		},
+		props:['songInfo', 'imgUrl', 'playing'],
+    data () {
+      return {
+        playingFlag: true
+      }
+    },
 		computed: {
 			'icon_value' () {
-		      return !this.playing ? 'play_circle_outline' : 'pause_circle_outline';
-		    }
+		    return !this.playing ? 'play_circle_outline' : 'pause_circle_outline';
+		  },
 		},
+    watch: {
+      'playing' (newVal, oldVal) {
+        this.playingFlag = newVal;
+      }
+    },
 		methods: {
 			switchPlay () {
-		      this.playing = !this.playing;
-		      this.$emit('play', this.playing);
+		      this.playingFlag = !this.playingFlag;
+		      this.$emit('play', this.playingFlag);
 		    }
 		}
 	}

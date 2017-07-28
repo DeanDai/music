@@ -25,6 +25,7 @@
 					singerName: song.singerName
 				}
 				S.songService.setSongInfo(songInfo);
+				S.radioService.setRadioList([]); // 重置radioList里的值
 				this.$router.push('/song/' + songInfo.songId);
 			}
 		}
