@@ -30,9 +30,8 @@
 			</section> -->
 			<section class="m-songlist">
 				<mu-list>
-					<mu-list-item :title="item.songname" v-for="item in searchResult" :key="item.songid" @click="goToDetail(item)">
+					<mu-list-item :title="item.songname | unicode2asc" v-for="item in searchResult" :key="item.songid" @click="goToDetail(item)">
 			      		<span class="desc" v-html="item.singer[0].name + ' - ' + item.albumname">
-			      			{{item.singer[0].name + ' - ' + item.albumname}}
 			      		</span>
             			<mu-icon value="play_circle_outline" class="m-icon-play" slot="right"/>
 			    	</mu-list-item>
