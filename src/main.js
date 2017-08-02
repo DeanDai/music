@@ -6,6 +6,8 @@ import service from '@/store/service.js'
 import router from './router'
 import MuseUI from 'muse-ui'
 import 'muse-ui/dist/muse-ui.css'
+import LogRocket from 'logrocket'
+LogRocket.init('p2onjo/test')
 Vue.use(MuseUI)
 Vue.config.productionTip = false
 
